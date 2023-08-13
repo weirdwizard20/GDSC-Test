@@ -1,50 +1,45 @@
-const loginForm = document.getElementById('login-form');
-const registerForm = document.getElementById('register-form');
-const userInfo = document.getElementById('user-info');
 
-loginForm.addEventListener('submit', handleLogin);
-registerForm.addEventListener('submit', handleRegister);
+const usersDatabase = [
+    { username: 'user1', password: 'password1', name: 'John Doe', personalInfo: 'Some info about John' },
+    
+];
 
-function handleLogin(event) {
+const loginForm = document.getElementById('login');
+const registerForm = document.getElementById('register');
+const userInfoContainer = document.getElementById('user-info');
+const userName = document.getElementById('user-name');
+const userPersonalInfo = document.getElementById('user-personal-info');
+
+loginForm.addEventListener('submit', (event) => {
     event.preventDefault();
     const username = document.getElementById('login-username').value;
     const password = document.getElementById('login-password').value;
-    
-    
-    const user = simulateLogin(username, password);
-    if (user) {
-        displayUserInfo(user.name);
-    }
-}
 
-function handleRegister(event) {
+    const user = usersDatabase.find(user => user.username === username && user.password === password);
+
+    if (user) {
+        showUserInfo(user);
+    } else {
+        alert('Invalid username or password');
+    }
+});
+
+registerForm.addEventListener('submit', (event) => {
     event.preventDefault();
     const username = document.getElementById('register-username').value;
     const password = document.getElementById('register-password').value;
     const name = document.getElementById('register-name').value;
-    
-    const user = simulateRegister(username, password, name);
-    if (user) {
-        displayUserInfo(user.name);
-    }
-}
+    const personalInfo = document.getElementById('register-personal-info').value;
 
-function simulateLogin(username, password) {
-   
-    const users = [
-        { username: 'user1', password: 'password1', name: 'User One' },
-        { username: 'user2', password: 'password2', name: 'User Two' },
-    ];
-    const user = users.find(u => u.username === username && u.password === password);
-    return user;
-}
+    // Add user to the database
+    usersDatabase.push({ username, password, name, personalInfo });
+    alert('Registration successful! You can now log in.');
+});
 
-function simulateRegister(username, password, name) {
-   
-    const newUser = { username, password, name };
-    return newUser;
-}
-
-function displayUserInfo(name) {
-    userInfo.innerHTML = `Welcome, ${name}!`;
+function showUserInfo(user) {
+    userName.textContent = user.name;
+    userPersonalInfo.textContent = user.personalInfo;
+    userInfoContainer.classList.remove('hidden');
+    loginForm.style.display = 'none';
+    registerForm.style.display = 'none';
 }
